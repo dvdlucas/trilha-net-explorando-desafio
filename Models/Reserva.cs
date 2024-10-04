@@ -1,60 +1,78 @@
-namespace DesafioProjetoHospedagem.Models
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Hotel.Models
 {
-    public class Reserva
+    internal class Reserva
     {
-        public List<Pessoa> Hospedes { get; set; }
-        public Suite Suite { get; set; }
+        public IList<Pessoa> Hospedes;
         public int DiasReservados { get; set; }
+        public Suite Suite { get; private set; }
 
         public Reserva() { }
-
         public Reserva(int diasReservados)
         {
-            DiasReservados = diasReservados;
+            diasReservados = DiasReservados;
         }
 
         public void CadastrarHospedes(List<Pessoa> hospedes)
         {
-            // TODO: Verificar se a capacidade é maior ou igual ao número de hóspedes sendo recebido
-            // *IMPLEMENTE AQUI*
-            if (true)
+
+            int qtdCapacidade = Suite.Capacidade;
+            if ( qtdCapacidade >= hospedes.Count )
             {
                 Hospedes = hospedes;
             }
             else
             {
-                // TODO: Retornar uma exception caso a capacidade seja menor que o número de hóspedes recebido
-                // *IMPLEMENTE AQUI*
+                throw new Exception("Essa suite não comporta esse tanto de gente");
             }
         }
 
-        public void CadastrarSuite(Suite suite)
-        {
-            Suite = suite;
-        }
+        public void CadastrarSuite(Suite suite) { Suite = suite; }
 
-        public int ObterQuantidadeHospedes()
+        public int ObterQuantidadesHospedes()
         {
-            // TODO: Retorna a quantidade de hóspedes (propriedade Hospedes)
-            // *IMPLEMENTE AQUI*
-            return 0;
+            int qtdHospedes = Hospedes.Count;
+            return qtdHospedes;
         }
 
         public decimal CalcularValorDiaria()
         {
-            // TODO: Retorna o valor da diária
-            // Cálculo: DiasReservados X Suite.ValorDiaria
-            // *IMPLEMENTE AQUI*
-            decimal valor = 0;
+            decimal valortotal = DiasReservados * Suite.ValorDiaria;
 
-            // Regra: Caso os dias reservados forem maior ou igual a 10, conceder um desconto de 10%
-            // *IMPLEMENTE AQUI*
-            if (true)
+            if (DiasReservados > 10)
             {
-                valor = 0;
+                decimal valorCDesconto = valortotal - (valortotal * 10 / 100);
+                return valorCDesconto;
+            } else
+            {
+                return valortotal;
             }
-
-            return valor;
         }
+        public string NomesPessoas()
+        {
+            if (Hospedes.Count > 0)
+            {
+                StringBuilder pessoas = new StringBuilder();
+
+                foreach (Pessoa pessoa in Hospedes)
+                {
+                    pessoas.Append(pessoa.Nome + " , ");
+                }
+
+                if (pessoas.Length > 0)
+                {
+                    pessoas.Length--;
+                }
+
+                return pessoas.ToString();
+            }
+            return "Não tem hospedes";
+        }
+
     }
 }
